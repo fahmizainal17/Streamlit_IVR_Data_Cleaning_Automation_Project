@@ -1,3 +1,8 @@
+# Remove Virtual Environment
+venv_fahmi/
+
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
