@@ -1,9 +1,7 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from collections import Counter
 from datetime import datetime
-
 
 # Function to process each uploaded file
 def process_file(uploaded_file):
@@ -13,7 +11,7 @@ def process_file(uploaded_file):
     df_phonenum = df[['PhoneNo']]
     df_response = df.loc[:, 'UserKeyPress':]
     df_results = pd.concat([df_phonenum, df_response], axis='columns')
-    
+
     total_calls = len(df_results)
     phonenum_recycle = df_results.dropna(subset=['UserKeyPress'])
     phonenum_list = phonenum_recycle[['PhoneNo']]
@@ -51,12 +49,15 @@ if uploaded_files:
 
     # Combine all processed data into one DataFrame
     combined_data = pd.concat(all_data, ignore_index=True)
+    combined_phonenum = pd.concat(all_phonenum, axis=0)
+
+    # Displaying the results
+    st.write(f"Total calls made: {total_calls_made}")
+    st.write(f"Total of pick-ups: {total_pickups}")
+    st.write(f"Total count of phone numbers that need to be excluded in the next sampling: {combined_phonenum.shape[0]}")
 
     # Determine the most common location name
     most_common_location, _ = Counter(location_names).most_common(1)[0]
-
-    # Calculate Pick-up Rate and display results
-    # ... (rest of your code for displaying results)
 
     # Determine the file name for download
     formatted_date = datetime.now().strftime("%Y%m%d")
