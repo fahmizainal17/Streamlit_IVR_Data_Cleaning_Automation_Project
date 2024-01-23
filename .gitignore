@@ -1,6 +1,8 @@
 # Remove Virtual Environment
 venv_fahmi/
 
+# password
+.streamlit/secrets.toml
 
 
 # Byte-compiled / optimized / DLL files
