@@ -1,12 +1,9 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from main.cleaned_data_utils import calculation_utils
 from collections import Counter
 from datetime import datetime
 
-# Importing a specific page
-from main.pages import 2_Questionnaire_Definer_Keypresses_Decoder
 
 # Function to process each uploaded file
 def process_file(uploaded_file):
@@ -52,6 +49,9 @@ if uploaded_files:
         total_calls_made += total_calls
         total_pickups += total_pickups_per_file
 
+    # Combine all processed data into one DataFrame
+    combined_data = pd.concat(all_data, ignore_index=True)
+
     # Determine the most common location name
     most_common_location, _ = Counter(location_names).most_common(1)[0]
 
@@ -70,5 +70,3 @@ if uploaded_files:
         file_name=output_filename,
         mime='text/csv'
     )
-    
-    
