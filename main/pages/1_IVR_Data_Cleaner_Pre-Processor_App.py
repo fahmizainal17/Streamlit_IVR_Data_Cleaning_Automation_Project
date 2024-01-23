@@ -1,7 +1,12 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import io
+from main.cleaned_data_utils import calculation_utils
+from collections import Counter
+from datetime import datetime
+
+# Importing a specific page
+from main.pages import 2_Questionnaire_Definer_Keypresses_Decoder
 
 # Function to process each uploaded file
 def process_file(uploaded_file):
@@ -34,34 +39,36 @@ if uploaded_files:
     all_phonenum = []
     total_calls_made = 0
     total_pickups = 0
+    location_names = []
 
     for uploaded_file in uploaded_files:
+        # Extract location name from file name
+        location_name = uploaded_file.name.split('_for_')[1].split(' ')[0]
+        location_names.append(location_name)
+
         df_complete, phonenum_list, total_calls, total_pickups_per_file = process_file(uploaded_file)
         all_data.append(df_complete)
         all_phonenum.append(phonenum_list)
         total_calls_made += total_calls
         total_pickups += total_pickups_per_file
 
-    # Calculate Pick-up Rate
-    if total_calls_made > 0:
-        pickup_rate = total_pickups / total_calls_made
-    else:
-        pickup_rate = 0
+    # Determine the most common location name
+    most_common_location, _ = Counter(location_names).most_common(1)[0]
 
-    # Combine and display results
-    combined_data = pd.concat(all_data, axis=0)
-    combined_phonenum = pd.concat(all_phonenum, axis=0)
+    # Calculate Pick-up Rate and display results
+    # ... (rest of your code for displaying results)
 
-    st.write(f"Total calls made: {total_calls_made}")
-    st.write(f"Total of pick-ups: {total_pickups}")
-    st.write(f"Pick-up Rate: {pickup_rate:.2%}")  # Display as a percentage
-    st.write(f"Total count of phone numbers that need to be excluded in the next sampling: {combined_phonenum.shape[0]}")
+    # Determine the file name for download
+    formatted_date = datetime.now().strftime("%Y%m%d")
+    output_filename = f'ivr_{most_common_location}_survey2023_used_phonenum_v{formatted_date}.csv'
 
     # Option to download combined data
     data_as_csv = combined_data.to_csv(index=False).encode('utf-8')
     st.download_button(
         label="Download Processed Data as CSV",
         data=data_as_csv,
-        file_name='processed_data.csv',
+        file_name=output_filename,
         mime='text/csv'
     )
+    
+    
