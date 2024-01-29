@@ -7,6 +7,8 @@ from security_utils import check_password
 from PIL import Image
 
 
+
+
 # configure the default settings of the page.
 icon = Image.open('./images/invoke_logo.png')
 st.set_page_config(
