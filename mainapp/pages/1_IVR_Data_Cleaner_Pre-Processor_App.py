@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from collections import Counter
 from datetime import datetime
-from security_utils import check_password
+from mainapp.security_utils import check_password
 from PIL import Image
 import numpy as np
 
