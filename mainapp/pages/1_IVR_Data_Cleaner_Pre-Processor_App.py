@@ -1,8 +1,44 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 from collections import Counter
 from datetime import datetime
+from security_utils import check_password
+from PIL import Image
+
+# Configure the default settings of the page.
+icon = Image.open('./images/invoke_logo.png')
+st.set_page_config(
+    page_title='IVR Data Cleaner 🧮',
+    layout="wide",
+    page_icon=icon,
+    initial_sidebar_state="expanded"
+)
+
+def set_dark_mode_css():
+    # Define CSS for dark mode
+    dark_mode_css = """
+    <style>
+        html, body, [class*="View"] {
+            color: #ffffff;  /* Text Color */
+            background-color: #111111;  /* Background Color */
+        }
+        .stTextInput > div > div > input {
+            color: #ffffff;
+            background-color: #111111;
+        }
+        .stCheckbox > label {
+            color: #ffffff;
+        }
+        /* Add other widget-specific styles here */
+    </style>
+    """
+    # Inject CSS into the Streamlit app
+    st.markdown(dark_mode_css, unsafe_allow_html=True)
+
+# Call the function to apply the dark mode
+set_dark_mode_css()
+
+if check_password():
 
 # Function to process each uploaded file
 def process_file(uploaded_file):
