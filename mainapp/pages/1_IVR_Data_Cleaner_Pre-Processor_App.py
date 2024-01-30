@@ -93,14 +93,14 @@ if check_password():
         combined_phonenum.rename(columns={'PhoneNo': 'phonenum'}, inplace=True)
         
         total_CRs = combined_data.shape[0]
-        pick_up_rate = total_pickups / total_calls_made if total_calls_made > 0 else 0
-        cr_rate = total_CRs / total_pickups if total_pickups > 0 else 0
+        pick_up_rate_percentage = (total_pickups / total_calls_made) * 100 if total_calls_made > 0 else 0
+        cr_rate_percentage = (total_CRs / total_pickups) * 100 if total_pickups > 0 else 0
         
         st.write(f"Total calls made: {total_calls_made}")
         st.write(f"Total of pick-ups: {total_pickups}")
         st.write(f"Total CRs: {total_CRs}")
-        st.write(f"Pick-up Rate: {pick_up_rate:.2f}")
-        st.write(f"CR Rate: {cr_rate:.2f}")
+        st.write(f"Pick-up Rate: {pick_up_rate_percentage:.2f}%")
+        st.write(f"CR Rate: {cr_rate_percentage:.2f}%")
         st.write(f"Total count of phone numbers that need to be excluded in the next sampling: {combined_phonenum.shape[0]}")
         st.write(f"Total files processed: {file_count}")
 
