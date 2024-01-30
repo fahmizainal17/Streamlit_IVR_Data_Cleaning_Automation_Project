@@ -6,8 +6,8 @@ from security_utils import check_password
 icon = Image.open('./images/invoke_logo.png')
 st.set_page_config(
     page_title="Questionairre-Definer-Keypresses-Decoder 🧮",
-    page_icon="icon",
     layout="wide",
+    page_icon="icon",
     initial_sidebar_state="expanded"
    )
 
@@ -36,5 +36,6 @@ def set_dark_mode_css():
 set_dark_mode_css()
 
 if check_password():
-   st.write(f"Total files processed:")
+    st.write(f"Total files processed:")
+    st.write("Total summation")
 

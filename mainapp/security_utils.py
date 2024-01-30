@@ -16,7 +16,7 @@ def password_entered():
 def check_password():
     """Displays a password input and checks the password."""
     if "password_correct" not in st.session_state or not st.session_state["password_correct"]:
-        st.header("INVOKE Automation Survey 🧑‍⚖️")
+        st.header("INVOKE Survey Automation 🎯")
         
         # Load and display image (include error handling for image loading)
         try:

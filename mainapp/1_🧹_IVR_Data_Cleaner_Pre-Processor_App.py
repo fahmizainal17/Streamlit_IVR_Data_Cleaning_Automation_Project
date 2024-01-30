@@ -66,47 +66,60 @@ if check_password():
 
         return df_complete, phonenum_list, total_calls, total_pickup
 
+    # Using markdown to create a top heading (H2)
+    st.markdown("## Upload IVR Files (.csv format)")
+
+    # Setting up the file uploader widget with the new label
     uploaded_files = st.file_uploader("Choose CSV files", accept_multiple_files=True)
 
+    # Display the count of uploaded files
     if uploaded_files:
-        total_calls_made = 0
-        total_pickups = 0
+        st.write(f"Number of files uploaded: {len(uploaded_files)}")
 
-        for uploaded_file in uploaded_files:
-            df_complete, phonenum_list, total_calls, total_pickup = process_file(uploaded_file)
-            all_data.append(df_complete)
-            all_phonenum.append(phonenum_list)
-            total_calls_made += total_calls
-            total_pickups += total_pickup
-            file_count += 1
+    # Create a 'Process' button
+    if st.button('Process'):
+        if uploaded_files:
+            processing_message = st.empty()
+            processing_message.write("Processing the files...")  # Display a message when processing starts
+
+
+            total_calls_made = 0
+            total_pickups = 0
+
+            for uploaded_file in uploaded_files:
+                df_complete, phonenum_list, total_calls, total_pickup = process_file(uploaded_file)
+                all_data.append(df_complete)
+                all_phonenum.append(phonenum_list)
+                total_calls_made += total_calls
+                total_pickups += total_pickup
+                file_count += 1
 
         # Final concatenation
         combined_data = pd.concat(all_data, axis='index', ignore_index=True)
         combined_phonenum = pd.concat(all_phonenum, axis=0).drop_duplicates()
         combined_phonenum.rename(columns={'PhoneNo': 'phonenum'}, inplace=True)
 
-        default_location = 'PETALING JAYA'
-        survey_name = st.text_input("Edit the name of the eg. State, District, DUN that you study", value=default_location)
-        
-        combined_data = pd.concat(all_data, ignore_index=True)
-        combined_phonenum = pd.concat(all_phonenum, axis=0).drop_duplicates()
-        combined_phonenum.rename(columns={'PhoneNo': 'phonenum'}, inplace=True)
         
         total_CRs = combined_data.shape[0]
         pick_up_rate_percentage = (total_pickups / total_calls_made) * 100 if total_calls_made > 0 else 0
         cr_rate_percentage = (total_CRs / total_pickups) * 100 if total_pickups > 0 else 0
         
-        st.write(f"Total calls made: {total_calls_made}")
-        st.write(f"Total of pick-ups: {total_pickups}")
-        st.write(f"Total CRs: {total_CRs}")
+        # Update the placeholder with the new message after processing is complete
+        processing_message.write("Files have been processed successfully.")
+        
+        st.markdown("## **IVR Campaign Basic Statistics:**")
+        st.write(f"Total calls made: {total_calls_made:,}")
+        st.write(f"Total of pick-ups: {total_pickups:,}")
+        st.write(f"Total CRs: {total_CRs:,}")
         st.write(f"Pick-up Rate: {pick_up_rate_percentage:.2f}%")
         st.write(f"CR Rate: {cr_rate_percentage:.2f}%")
-        st.write(f"Total count of phone numbers that need to be excluded in the next sampling: {combined_phonenum.shape[0]}")
-        st.write(f"Total files processed: {file_count}")
 
+        default_location = 'PETALING JAYA'
+        survey_name = st.text_input("Edit the name of the eg. State, District, DUN that you study", value=default_location)
+        
         formatted_date = datetime.now().strftime("%Y%m%d")
         output_filename = f'ivr_{survey_name}_survey2023_used_phonenum_v{formatted_date}.csv'
-
+        
         data_as_csv = combined_data.to_csv(index=False).encode('utf-8')
         st.download_button(
             label="Download Processed Data as CSV",
@@ -114,3 +127,6 @@ if check_password():
             file_name=output_filename,
             mime='text/csv'
         )
+
+        # Add instructions for navigating to the next page
+        st.write("To continue to the Questionnaire Definition, please navigate to the 'Questionairre-Definer_Keypresses-Decoder' app.")
