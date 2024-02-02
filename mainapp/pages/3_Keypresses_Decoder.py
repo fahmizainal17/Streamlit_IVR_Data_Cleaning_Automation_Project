@@ -173,40 +173,166 @@ set_dark_mode_css()
 
 # page3.py
 
+# import streamlit as st
+# import pandas as pd
+
+# def run():
+#     st.title('Keypresses Decoder')
+
+#     # Check if the data with renamed columns exists in the session state
+#     if 'renamed_data' in st.session_state:
+#         renamed_data = st.session_state['renamed_data']
+#         st.write("Preview of Renamed Data:")
+#         st.dataframe(renamed_data.head())
+
+#         # A dictionary to hold the mappings for each keypress
+#         keypress_mappings = {}
+
+#         # Iterate through each column in the DataFrame
+#         for col in renamed_data.columns:
+#             # Display the question (column name)
+#             st.subheader(f"Question: {col}")
+#             # Get unique keypress values for the current column
+#             unique_values = renamed_data[col].unique()
+#             # Create a container to hold the text inputs
+#             container = st.container()
+#             all_mappings = {}
+#             # Iterate over unique values and create a text input for each
+#             for val in unique_values:
+#                 if pd.notna(val):  # Skip NaN values
+#                     # The user can define the mapping for each keypress value
+#                     readable_val = container.text_input(f"Rename '{val}' to:", value="", key=f"{col}_{val}")
+#                     if readable_val:  # Only add non-empty mappings
+#                         all_mappings[val] = readable_val
+#             if all_mappings:
+#                 keypress_mappings[col] = all_mappings
+
+#         if st.button("Decode Keypresses"):
+#             # Apply the mappings to the DataFrame
+#             for col, col_mappings in keypress_mappings.items():
+#                 renamed_data[col] = renamed_data[col].map(col_mappings).fillna(renamed_data[col])
+
+#             # Save the updated DataFrame to the session state
+#             st.session_state['decoded_data'] = renamed_data
+
+#             # Display the updated DataFrame
+#             st.write("Data with Decoded Keypresses:")
+#             st.dataframe(renamed_data.head())
+
+#             # Display the answer proportions for each question
+#             for col in renamed_data.columns:
+#                 st.write(f"Answer Proportions for {col}:")
+#                 proportions = renamed_data[col].value_counts(normalize=True)
+#                 st.bar_chart(proportions)
+
+#     else:
+#         st.error("No renamed data found. Please go back to the previous step and rename your data first.")
+
+# if __name__ == "__main__":
+#     run()
+
+# page3.py
+# page3.py
+
+# import streamlit as st
+# import pandas as pd
+
+# def run():
+#     st.title('Keypresses Decoder')
+
+#     if 'renamed_data' in st.session_state:
+#         renamed_data = st.session_state['renamed_data']
+#         st.write("Preview of Renamed Data:")
+#         st.dataframe(renamed_data.head())
+
+#         # Dictionary to hold the mappings
+#         keypress_mappings = {}
+
+#         # Iterate through each column in the DataFrame, skipping the first column (phonenum)
+#         for col in renamed_data.columns[1:]:  # Start from the second column
+#             st.subheader(f"Question: {col}")
+#             # Get unique keypress values for the current column and sort them
+#             unique_values = sorted(
+#                 [val for val in renamed_data[col].unique() if pd.notna(val)],
+#                 key=lambda x: int(x.split('=')[1])
+#             )
+#             # Create a container to hold the text inputs
+#             container = st.container()
+#             all_mappings = {}
+#             # Iterate over unique values and create a text input for each
+#             for val in unique_values:
+#                 readable_val = container.text_input(f"Rename '{val}' to:", value="", key=f"{col}_{val}")
+#                 if readable_val:  # Only add non-empty mappings
+#                     all_mappings[val] = readable_val
+#             if all_mappings:
+#                 keypress_mappings[col] = all_mappings
+
+#         # Button to apply the mappings and update the DataFrame
+#         if st.button("Decode Keypresses"):
+#             # Apply the mappings to the DataFrame
+#             for col, col_mappings in keypress_mappings.items():
+#                 renamed_data[col] = renamed_data[col].map(col_mappings).fillna(renamed_data[col])
+
+#             # Save the updated DataFrame to the session state
+#             st.session_state['decoded_data'] = renamed_data
+
+#             # Display the updated DataFrame
+#             st.write("Data with Decoded Keypresses:")
+#             st.dataframe(renamed_data.head())
+
+#             # Display the answer proportions for each question
+#             for col in renamed_data.columns[1:]:  # Again, skip the first column (phonenum)
+#                 st.write(f"Answer Proportions for {col}:")
+#                 st.write(renamed_data[col].value_counts(normalize=True))
+                
+#     else:
+#         st.error("No renamed data found. Please go back to the previous step and rename your data first.")
+
+# if __name__ == "__main__":
+#     run()
+
+# page3.py
+
 import streamlit as st
 import pandas as pd
 
 def run():
     st.title('Keypresses Decoder')
 
-    # Check if the data with renamed columns exists in the session state
     if 'renamed_data' in st.session_state:
         renamed_data = st.session_state['renamed_data']
         st.write("Preview of Renamed Data:")
         st.dataframe(renamed_data.head())
 
-        # A dictionary to hold the mappings for each keypress
+        # Dictionary to hold the mappings
         keypress_mappings = {}
 
-        # Iterate through each column in the DataFrame
+        # List of columns to skip when creating input fields
+        columns_to_skip = ["phonenum", "Set"]
+
+        # Iterate through each column in the DataFrame, skipping specified columns
         for col in renamed_data.columns:
-            # Display the question (column name)
+            if col in columns_to_skip:
+                continue  # Skip the current column
+
             st.subheader(f"Question: {col}")
-            # Get unique keypress values for the current column
-            unique_values = renamed_data[col].unique()
+            # Get unique keypress values for the current column and sort them
+            unique_values = sorted(
+                [val for val in renamed_data[col].unique() if pd.notna(val)],
+                key=lambda x: int(x.split('=')[1])
+            )
             # Create a container to hold the text inputs
             container = st.container()
             all_mappings = {}
             # Iterate over unique values and create a text input for each
             for val in unique_values:
-                if pd.notna(val):  # Skip NaN values
-                    # The user can define the mapping for each keypress value
-                    readable_val = container.text_input(f"Rename '{val}' to:", value="", key=f"{col}_{val}")
-                    if readable_val:  # Only add non-empty mappings
-                        all_mappings[val] = readable_val
+                readable_val = container.text_input(f"Rename '{val}' to:", value="", key=f"{col}_{val}")
+                if readable_val:  # Only add non-empty mappings
+                    all_mappings[val] = readable_val
             if all_mappings:
                 keypress_mappings[col] = all_mappings
 
+        # Button to apply the mappings and update the DataFrame
         if st.button("Decode Keypresses"):
             # Apply the mappings to the DataFrame
             for col, col_mappings in keypress_mappings.items():
@@ -221,6 +347,8 @@ def run():
 
             # Display the answer proportions for each question
             for col in renamed_data.columns:
+                if col in columns_to_skip:
+                    continue  # Skip the columns that do not have keypress mappings
                 st.write(f"Answer Proportions for {col}:")
                 proportions = renamed_data[col].value_counts(normalize=True)
                 st.bar_chart(proportions)
