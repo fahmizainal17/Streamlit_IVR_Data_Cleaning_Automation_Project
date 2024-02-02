@@ -235,78 +235,78 @@ def run():
         if uploaded_files:
             st.write(f"Number of files uploaded: {len(uploaded_files)}")
 
-    if st.button('Process'):
-        with st.spinner("Processing the files..."):
-            # Reset counters and lists
-            st.session_state['all_data'] = []
-            st.session_state['all_phonenum'] = []
-            st.session_state['total_calls_made'] = 0
-            st.session_state['total_pickups'] = 0
-            st.session_state['file_count'] = 0
+        if st.button('Process'):
+            with st.spinner("Processing the files..."):
+                # Reset counters and lists
+                st.session_state['all_data'] = []
+                st.session_state['all_phonenum'] = []
+                st.session_state['total_calls_made'] = 0
+                st.session_state['total_pickups'] = 0
+                st.session_state['file_count'] = 0
 
-            # Process files and update session state
-            for uploaded_file in uploaded_files:
-                df_complete, phonenum_list, total_calls, total_pickup = process_file(uploaded_file)
-                st.session_state['all_data'].append(df_complete)
-                st.session_state['all_phonenum'].append(phonenum_list)
-                st.session_state['total_calls_made'] += total_calls
-                st.session_state['total_pickups'] += total_pickup
-                st.session_state['file_count'] += 1
+                # Process files and update session state
+                for uploaded_file in uploaded_files:
+                    df_complete, phonenum_list, total_calls, total_pickup = process_file(uploaded_file)
+                    st.session_state['all_data'].append(df_complete)
+                    st.session_state['all_phonenum'].append(phonenum_list)
+                    st.session_state['total_calls_made'] += total_calls
+                    st.session_state['total_pickups'] += total_pickup
+                    st.session_state['file_count'] += 1
 
-            st.session_state['processed'] = True
+                st.session_state['processed'] = True
 
-    if st.session_state['processed']:
-        # Use data from session state
-        combined_data = pd.concat(st.session_state['all_data'], axis='index', ignore_index=True)
-        combined_phonenum = pd.concat(st.session_state['all_phonenum'], axis=0).drop_duplicates()
-        combined_phonenum.rename(columns={'PhoneNo': 'phonenum'}, inplace=True)
+        if st.session_state['processed']:
+            # Use data from session state
+            combined_data = pd.concat(st.session_state['all_data'], axis='index', ignore_index=True)
+            combined_phonenum = pd.concat(st.session_state['all_phonenum'], axis=0).drop_duplicates()
+            combined_phonenum.rename(columns={'PhoneNo': 'phonenum'}, inplace=True)
 
-        # Save statistics in session state
-        st.session_state['total_CRs'] = combined_data.shape[0]
-        st.session_state['pick_up_rate_percentage'] = (st.session_state['total_pickups'] / st.session_state['total_calls_made']) * 100 if st.session_state['total_calls_made'] > 0 else 0
-        st.session_state['cr_rate_percentage'] = (st.session_state['total_CRs'] / st.session_state['total_pickups']) * 100 if st.session_state['total_pickups'] > 0 else 0
-                
-        # Update the placeholder with the new message after processing is complete
-        st.success("Files have been processed successfully.✨")
-        
-        st.markdown("## **IVR Campaign Basic Statistics:**")
-        st.write(f"Total calls made: {st.session_state['total_calls_made']:,}")
-        st.write(f"Total of pick-ups: {st.session_state['total_pickups']:,}")
-        st.write(f"Total CRs: {st.session_state['total_CRs']:,}")
-        st.write(f"Pick-up Rate: {st.session_state['pick_up_rate_percentage']:.2f}%")
-        st.write(f"CR Rate: {st.session_state['cr_rate_percentage']:.2f}%")
+            # Save statistics in session state
+            st.session_state['total_CRs'] = combined_data.shape[0]
+            st.session_state['pick_up_rate_percentage'] = (st.session_state['total_pickups'] / st.session_state['total_calls_made']) * 100 if st.session_state['total_calls_made'] > 0 else 0
+            st.session_state['cr_rate_percentage'] = (st.session_state['total_CRs'] / st.session_state['total_pickups']) * 100 if st.session_state['total_pickups'] > 0 else 0
+                    
+            # Update the placeholder with the new message after processing is complete
+            st.success("Files have been processed successfully.✨")
+            
+            st.markdown("## **IVR Campaign Basic Statistics:**")
+            st.write(f"Total calls made: {st.session_state['total_calls_made']:,}")
+            st.write(f"Total of pick-ups: {st.session_state['total_pickups']:,}")
+            st.write(f"Total CRs: {st.session_state['total_CRs']:,}")
+            st.write(f"Pick-up Rate: {st.session_state['pick_up_rate_percentage']:.2f}%")
+            st.write(f"CR Rate: {st.session_state['cr_rate_percentage']:.2f}%")
 
-        # Display a snippet of the cleaned data
-        st.markdown("## Cleaned Data Preview:")
-        st.dataframe(combined_data.head())  # Show the first 5 rows as a preview
+            # Display a snippet of the cleaned data
+            st.markdown("## Cleaned Data Preview:")
+            st.dataframe(combined_data.head())  # Show the first 5 rows as a preview
 
-        # Current date for the filename
-        formatted_date = datetime.now().strftime("%Y%m%d")
+            # Current date for the filename
+            formatted_date = datetime.now().strftime("%Y%m%d")
 
-        # Format the default filename
-        default_filename = f'IVR_Petaling_Jaya_Survey2023_Used_Phonenum_v{formatted_date}.csv'
+            # Format the default filename
+            default_filename = f'IVR_Petaling_Jaya_Survey2023_Used_Phonenum_v{formatted_date}.csv'
 
-        # Use the default filename in the text input, allowing the user to edit it
-        output_filename = st.text_input("Edit the filename for download", value=default_filename)
+            # Use the default filename in the text input, allowing the user to edit it
+            output_filename = st.text_input("Edit the filename for download", value=default_filename)
 
-        # Check if the output filename ends with '.csv', if not append '.csv'
-        if not output_filename.lower().endswith('.csv'):
-            output_filename += '.csv'
-        
-        # After data processing
-        st.session_state['cleaned_data'] = combined_data
+            # Check if the output filename ends with '.csv', if not append '.csv'
+            if not output_filename.lower().endswith('.csv'):
+                output_filename += '.csv'
+            
+            # After data processing
+            st.session_state['cleaned_data'] = combined_data
 
-        # Download button
-        data_as_csv = combined_data.to_csv(index=False).encode('utf-8')
-        st.download_button(
-            label="Download Cleaned Data as CSV",
-            data=data_as_csv,
-            file_name=output_filename,
-            mime='text/csv'
-        )
+            # Download button
+            data_as_csv = combined_data.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="Download Cleaned Data as CSV",
+                data=data_as_csv,
+                file_name=output_filename,
+                mime='text/csv'
+            )
 
-        # Add instructions for navigating to the next page
-        st.write("To continue to the Questionnaire Definition, please navigate to the 'Questionairre-Definer_Keypresses-Decoder' app.")
+            # Add instructions for navigating to the next page
+            st.write("To continue to the Questionnaire Definition, please navigate to the 'Questionairre-Definer_Keypresses-Decoder' app.")
     
         # ... [Rest of your code] ...
 
