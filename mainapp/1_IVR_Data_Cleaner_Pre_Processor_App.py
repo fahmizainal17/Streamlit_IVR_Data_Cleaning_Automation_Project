@@ -155,7 +155,7 @@ from datetime import datetime
 from modules.security_utils import check_password  # Assuming this is a custom module
 from PIL import Image
 import numpy as np
-
+print("🧹 🏹 🎥")
 def run():
     # Configure the default settings of the page.
     icon = Image.open('./images/invoke_logo.png')
