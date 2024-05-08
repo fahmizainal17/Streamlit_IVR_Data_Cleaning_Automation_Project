@@ -3,7 +3,7 @@ venv_fahmi/
 
 # password
 .streamlit/secrets.toml
-
+.streamlit
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
