@@ -1,72 +1,112 @@
-# Streamlit IVR Survey Automation Project Documentation
+# Streamlit Survey Automation
+
 A web application  to clean IVR Data for Analytics Purposes.
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ivr-cleaning-automation.streamlit.app/)
 
-## Project Overview
+---
 
-The Streamlit IVR (Interactive Voice Response) Survey Automation project aims to streamline the process of cleaning and preparing IVR survey data for analytics. This web application simplifies the often complex and time-consuming task of data processing, allowing analysts to focus more on extracting insights rather than data manipulation. Leveraging FastAPI for backend services and Streamlit for the frontend, the project offers a user-friendly interface for users to upload, process, and analyze their IVR survey data efficiently.
+## Overview
+The IVR Data Processing Suite is a comprehensive toolset designed for cleaning, processing, and analyzing IVR (Interactive Voice Response) campaign data. It utilizes a combination of Streamlit and FastAPI to provide an intuitive user interface for file uploads, data cleaning, questionnaire definition, keypress decoding, and data analysis. The suite is split into three main components: IVR Data Cleaner & Pre-Processor App, Questionnaire Definer, and Keypresses Decoder, which are built to work seamlessly together or as standalone modules.
 
 ## Getting Started
 
 ### Prerequisites
+- Docker
+- Python 3.8 or newer
 
-- Docker: The application is containerized using Docker, ensuring consistent environments across different systems.
-- Python 3.8 or later: Required for local development and running the application outside Docker.
+### Installation
 
-### Installation and Setup
-
-1. **Clone the Repository**: Begin by cloning the project repository to your local machine.
+1. Clone the repository to your local machine:
+   ```sh
+   git clone <repository-url>
    ```
-   git clone https://github.com/fahmizainal17/streamlit_ivr_survey_automation.git
+2. Navigate to the project directory and build the Docker container:
+   ```sh
+   cd <project-directory>
+   docker build -t ivr-data-suite .
    ```
-2. **Navigate to the Project Directory**:
+3. Run the Docker container:
+   ```sh
+   docker run -p 8501:8501 ivr-data-suite
    ```
-   cd streamlit_ivr_survey_automation
-   ```
-3. **Build and Run the Docker Container**:
-   - To build the Docker container, execute:
-     ```
-     docker build -t streamlit_ivr_survey_app .
-     ```
-   - Once the build is complete, run the container:
-     ```
-     docker run -p 8501:8501 streamlit_ivr_survey_app
-     ```
-   This will start the Streamlit server, and the application will be accessible at `http://localhost:8501`.
 
 ### Project Structure
 
-- **`.devcontainer`**: Contains configurations for setting up a development container in VSCode, ensuring a consistent development environment.
-- **`.structure`**: Describes the project's architecture, facilitating understanding and navigation of the project layout.
-- **`.surveyscript`**: Holds scripts related to survey data processing, including data cleaning, transformation, and analysis scripts.
-- **`fastapiapp`**: The FastAPI application directory, containing backend logic and APIs for handling data processing tasks.
-- **`images`**: Contains images used within the Streamlit application for UI enhancement.
-- **`mainapp`**: The main Streamlit application scripts, responsible for rendering the web interface and interacting with the backend FastAPI services.
-- **`.gitignore`**: Specifies intentionally untracked files to ignore.
-- **`Dockerfile`**: Defines the Docker container specifications for the project.
-- **`LICENSE`**: The project's license file.
-- **`README.md`**: Provides an overview of the project, setup instructions, and other essential information.
-- **`requirements.txt`**: Lists all Python dependencies required for the project.
+```
+.
+├── .gitignore
+├── Dockerfile
+├── LICENSE
+├── README.md
+├── requirements.txt
+├── .streamlit
+│   └── secrets.toml
+├── fastapiapp
+│   ├── dockerfile
+│   ├── security_utils.py
+│   ├── test.db
+│   ├── app
+│   │   ├── main.py
+│   │   └── modules
+│   │       ├── aws_utils.py
+│   │       ├── crud.py
+│   │       ├── data_cleaner_utils_page1.py
+│   │       ├── dependencies.py
+│   │       ├── keypress_decoder_utils_page3.py
+│   │       ├── questionnaire_utils_page2.py
+│   │       ├── schemas.py
+│   │       └── ...
+│   ├── tests
+│   │   └── tests_main.py
+│   └── images
+│       └── invoke_logo.png
+└── mainapp
+    ├── 1_IVR_Data_Cleaner_Pre_Processor_App.py
+    ├── modules
+    │   ├── data_cleaner_utils_page1.py
+    │   ├── keypress_decoder_utils_page3.py
+    │   ├── questionnaire_utils_page2.py
+    │   └── security_utils.py
+    └── pages
+        ├── 2_Questionnaire_Definer.py
+        └── 3_Keypresses_Decoder.py
+```
 
 ## Usage
 
-After successfully starting the application, navigate to `http://localhost:8501` in your web browser. The Streamlit interface provides intuitive options to upload your IVR survey data, specify cleaning and processing parameters, and initiate the data analysis process. Results can be viewed directly within the web application, and processed datasets can be downloaded for further analysis or reporting purposes.
+### IVR Data Cleaner & Pre-Processor App
 
-## Development
+- **Objective**: To clean and preprocess IVR data for analysis.
+- **Features**: Upload IVR files, visualize basic statistics, download cleaned data, and manage phone numbers for future sampling.
 
-For developers looking to contribute or customize the application, refer to the `.devcontainer` directory for setting up a development environment with VSCode. This ensures that all developers work within a consistent environment, minimizing the "it works on my machine" problem.
+### Questionnaire Definer
+
+- **Objective**: To define and structure the questionnaire from IVR campaigns.
+- **Features**: Upload script files, parse questions and answers, rename data columns, and prepare data for further processing.
+
+### Keypresses Decoder
+
+- **Objective**: To decode and categorize keypress responses from IVR campaigns.
+- **Features**: Upload script or JSON files for decoding, classify responses, and download the decoded data for analysis.
+
+### FastAPI App Integration
+
+- **Objective**: To integrate the Streamlit apps with a FastAPI backend for advanced data processing and storage capabilities.
+- **Setup**: Refer to the `fastapiapp` directory and Dockerfile for setup and deployment instructions.
 
 ## Contributing
 
-Contributions are welcome, and they can be made by following these steps:
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the repository.
-2. Create a new branch for your feature (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
