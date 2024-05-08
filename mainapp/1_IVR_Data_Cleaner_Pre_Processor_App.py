@@ -115,7 +115,7 @@
 
 #                 # Display a snippet of the cleaned data
 #                 st.markdown("## Cleaned Data Preview:")
-#                 st.dataframe(combined_data.head())  # Show the first 5 rows as a preview
+#                 st.dataframe(combined_data.head())  # Show the first 5 rows as a preview#
 
 #                 # Current date for the filename
 #                 formatted_date = datetime.now().strftime("%Y%m%d")
